@@ -14,6 +14,9 @@ RUN apt-get update && \
   pecl install xdebug && \
   docker-php-ext-enable xdebug
 
+RUN curl -sL https://deb.nodesource.com/setup_15.x | bash -
+RUN apt-get install -y nodejs
+
 COPY ./php.ini /usr/local/etc/php/php.ini
 
 WORKDIR /data
