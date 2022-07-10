@@ -175,6 +175,9 @@ return [
         App\Providers\EventServiceProvider::class,
         App\Providers\RouteServiceProvider::class,
 
+        // アプリケーション起動時に作成したサービスプロバイダを読み込むためここに記述する
+        App\Providers\SampleServiceProvider::class,
+
     ],
 
     /*

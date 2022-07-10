@@ -29,6 +29,21 @@ class LifeCycleTestController extends Controller
         // 呼び出したサービスの結果とサービスコンテナの一覧を表示
         dd($test, app());
     }
+
+    public function showServiceProviderTest(){
+        // 既存のサービスプロバイダーを使ってみる
+        /* $encrypt = app()->make('encrypter');
+        $password = $encrypt->encrypt('keine0312');
+        dd($password, $encrypt->decrypt($password)); */
+
+        // サービスプロバイダの生成
+        // command: php artisan make:provider SampleServiceProvider
+        // 上記の実行でApp/Providers配下にクラスが生成される
+
+        $sample = app()->make('serviceProviderTest');
+
+        dd($sample);
+    }
 }
 
 class Sample {
