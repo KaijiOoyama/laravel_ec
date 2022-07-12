@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\OwnerAuth;
+namespace App\Http\Controllers\Owner\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Providers\RouteServiceProvider;
