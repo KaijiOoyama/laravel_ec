@@ -5,6 +5,8 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\Owner;
+use App\Models\Shop;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
 use Carbon\Carbon;
 use Illuminate\SUpport\Facades\Hash;
@@ -68,13 +70,25 @@ class OwnersController extends Controller
             "password" => "required|string|confirmed|min:8"
         ]);
 
-        Owner::create([
-            'name' => $request->name,
-            "email" => $request->email,
-            "password" => $request->password
-        ]);
-
-
+        try {
+            DB::transaction(function () use ($request) {
+                $owner = Owner::create([
+                    'name' => $request->name,
+                    "email" => $request->email,
+                    "password" => $request->password
+                ]);
+                Shop::create([
+                    'owner_id' => $owner->id,
+                    'name' => '店舗１',
+                    'information' => '',
+                    'filename' => '',
+                    'is_selling' => true
+                ]);
+            }, 2);// 第２引数でデッドロックの場合の再試行回数をしていできる
+        } catch (\Throwable $e) {
+            Log::error($e);
+            throw $e;
+        }
 
         return redirect()
             ->route("admin.owners.index")
