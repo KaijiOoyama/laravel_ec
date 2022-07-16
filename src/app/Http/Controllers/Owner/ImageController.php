@@ -8,6 +8,7 @@ use App\Models\Image;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Requests\UploadImageRequest;
 use App\Services\ImageService;
+use Illuminate\Support\Facades\Storage;
 
 class ImageController extends Controller
 {
@@ -70,17 +71,6 @@ class ImageController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
-    }
-
-    /**
      * Show the form for editing the specified resource.
      *
      * @param  int  $id
@@ -88,7 +78,8 @@ class ImageController extends Controller
      */
     public function edit($id)
     {
-        //
+        $image = Image::findOrFail($id);
+        return view('owner.images.edit', compact('image'));
     }
 
     /**
@@ -100,7 +91,17 @@ class ImageController extends Controller
      */
     public function update(Request $request, $id)
     {
-        //
+        $request->validate([
+            'title' => 'string|max:50'
+        ]);
+
+        $image = Image::findOrFail($id);
+        $image->title = $request->title;
+        $image->save();
+
+        return redirect()
+            ->route("owner.images.index")
+            ->with(["message" => "image title update successfully!!", "status" => "info"]);
     }
 
     /**
@@ -111,6 +112,15 @@ class ImageController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $image = Image::findOrFail($id);
+        $filepath = 'public/products/' . $image->filename;
+        if(Storage::exists($filepath)) {
+            Storage::delete($filepath);
+        }
+
+        Image::findOrFail($id)->delete();
+        return redirect()
+            ->route("owner.images.index")
+            ->with([ "message" => "Image delete successfully!!", "status" => "alert" ]);
     }
 }
