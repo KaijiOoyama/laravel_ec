@@ -1,6 +1,6 @@
 @php
     if($type === 'shops') $path = 'storage/shops/';
-    if($type === 'products') $path = 'storage/products';
+    if($type === 'products') $path = 'storage/products/';
 @endphp
 <div>
     @if(empty($filename))
