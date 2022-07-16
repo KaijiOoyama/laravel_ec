@@ -9,6 +9,7 @@ use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Unique;
 use App\Http\Requests\UploadImageRequest;
+use App\Services\ImageService;
 use InterventionImage;
 
 class ShopController extends Controller
@@ -45,12 +46,9 @@ class ShopController extends Controller
     public function update(UploadImageRequest $request, $id)
     {
         $imageFile = $request->image;
-
         if(!is_null($imageFile) && $imageFile->isValid()) {
             // Storage::putFile('public/shops', $imageFile);// リサイズなしの場合
-            $filename = uniqid(rand() . '_') . '.' . $imageFile->extension();
-            $resizedImage = InterventionImage::make($imageFile)->resize(1920, 1080)->encode();
-            Storage::put('public/shops/'. $filename, $resizedImage);
+            $filename = ImageService::upload($imageFile, 'shops');
         }
 
         return redirect()
