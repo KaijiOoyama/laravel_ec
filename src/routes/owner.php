@@ -10,6 +10,7 @@ use App\Http\Controllers\Owner\Auth\PasswordResetLinkController;
 use App\Http\Controllers\Owner\Auth\RegisteredUserController;
 use App\Http\Controllers\Owner\Auth\VerifyEmailController;
 use App\Http\Controllers\Owner\ShopController;
+use App\Http\Controllers\Owner\ImageController;
 use App\Http\Controllers\LifeCycleTestController;
 /*
 |--------------------------------------------------------------------------
@@ -34,6 +35,8 @@ Route::prefix('shop')->middleware('auth:owners')->group(function(){
     Route::post('update/{shop}', [ShopController::class, "update"])
         ->name("shops.update");
 });
+
+
 
 Route::get('/dashboard', function () {
     return view('owner.dashboard');
@@ -82,4 +85,6 @@ Route::middleware(['auth:owners'])->group(function () {
 
     Route::post('logout', [AuthenticatedSessionController::class, 'destroy'])
                 ->name('logout');
+
+    Route::resource('images', ImageController::class)->except(["show"]);
 });
