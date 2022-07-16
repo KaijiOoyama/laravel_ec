@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Validation\Rules\Unique;
+use App\Http\Requests\UploadImageRequest;
 use InterventionImage;
 
 class ShopController extends Controller
@@ -41,7 +42,7 @@ class ShopController extends Controller
         return view("owner.shops.edit", compact("shop"));
     }
 
-    public function update(Request $request, $id)
+    public function update(UploadImageRequest $request, $id)
     {
         $imageFile = $request->image;
 
