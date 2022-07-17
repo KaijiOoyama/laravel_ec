@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use App\Models\Shop;
 use App\Models\Image;
+use App\Models\Stock;
 
 class Product extends Model
 {
@@ -26,5 +27,9 @@ class Product extends Model
         //の関係なのでイメージクラスを指定し、productsテーブル内のイメージと紐付いているカラムをしていする
         // またカラム名がテーブル_idの書式ではないため親テーブルのidとひもずいていることを明示的に指定する必要がある
         return $this->belongsTo(Image::class, 'image1', 'id');
+    }
+
+    public function stock() {
+        return $this->hasMany(Stock::class);
     }
 }
