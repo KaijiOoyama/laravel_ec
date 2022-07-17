@@ -24,7 +24,7 @@
                                         <div class="text-xl">
                                             {{-- {{ $product->name }} --}}
                                         </div>
-                                        <x-thumbnail :filename="$product->imageFirst->filename" type="products" />
+                                        <x-thumbnail filename="{{$product->imageFirst->filename ?? ''}}" type="products" />
                                     </div>
                                 </a>
                             </div>
