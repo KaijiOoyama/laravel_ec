@@ -4,9 +4,24 @@ namespace App\Http\Controllers\Owner;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use App\Models\Product;
+use App\Models\Image;
+use App\Models\Owner;
+use App\Models\SecondaryCategory;
 
 class ProductController extends Controller
 {
+    public function __construct(){
+        $this->middleware('auth:owners'); // コンストラクタにミドルウェアを読ませることで認証の確認ができる
+        $this->middleware(function ($request, $next) {
+            $targetProductId = $request->route()->parameter('product');
+            if(!is_null($targetProductId)) {
+                if((int) Product::findOrFail($targetProductId)->shop->owner->id !== Auth::id()) abort(404);
+            }
+            return $next($request);
+        });
+    }
     /**
      * Display a listing of the resource.
      *
@@ -14,7 +29,15 @@ class ProductController extends Controller
      */
     public function index()
     {
-        //
+        // N+1問題が発生する
+        // $products = Owner::findOrFail(Auth::id())->shop->product;
+        // 以下の記述であればデータを用意する時点ですべてをまとめて取得するクエリが発行される
+        // ただしview側で線形検索を行う必要がある
+        $ownerInfo = Owner::with('shop.product.imageFirst')
+            ->where('id', Auth::id())
+            ->get();
+
+        return view('owner.products.index', compact('ownerInfo'));
     }
 
     /**
